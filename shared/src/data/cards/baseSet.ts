@@ -406,7 +406,7 @@ export const baseSet: GameCard[] = [
     },
   },
   {
-    name: "Banana Pie",
+    name: 'Banana Pie',
     description: 'Double the health of any friendly (Memes Class)',
     bananas: 2,
     type: GameCardTypes.SPELL,

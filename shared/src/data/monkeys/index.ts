@@ -8,7 +8,7 @@ export const monkeys: Partial<Monkey>[] = [
     description: 'Always ready for a day off',
   },
   {
-    name: 'Siamang',
+    name: 'Caesar',
     monkeyClass: GameClass.Movies,
     description: 'The revolutionary',
   },

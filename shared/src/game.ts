@@ -59,7 +59,9 @@ const cardModelToGameCards = (cardModels: CardModel[]): GameCard[] => {
     // shallow copy
     let gameCard = cloneDeep(cards.find((c) => c.name === cardModel.name));
     if (!gameCard || !gameCard.name)
-      throw new Error('Could not find matching game card for model');
+      throw new Error(
+        `Could not find matching game card for model named ${cardModel.name}`,
+      );
     gameCard = initGameCard(gameCard);
     gameCards.push(gameCard);
   }

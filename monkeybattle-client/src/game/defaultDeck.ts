@@ -45,7 +45,7 @@ const defaultCards = [
     name: "Ponginae",
   },
   {
-    name: "Gorila",
+    name: "Gorilla",
   },
   {
     name: "Tapanuli Orangutan",
@@ -75,7 +75,7 @@ export const defaultAiUser: AddPlayer = {
   deck: {
     monkey: {
       id: 999,
-      name: "Siamang",
+      name: "Caesar",
       monkeyClass: "Memes",
       gameClassId: 1,
     },
