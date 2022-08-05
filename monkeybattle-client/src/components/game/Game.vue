@@ -151,7 +151,7 @@
                 :onBoard="true"
                 @mouseup="targetClicked(card, TargetTypes.FriendlyCreature)"
                 @mousedown="boardCardPressed(card)"
-                :ref="(comp) => setBoardSelectedElement(comp, card)"
+                :ref="(comp) => setBoardSelectedElement(comp as any, card)"
                 @mouseenter="setInfoPanel(InfoPanel.BoardCard, card)"
                 @mouseleave="setInfoPanel(InfoPanel.Default)"
               />
@@ -198,7 +198,7 @@
               @click="playCard(card)"
               class="hand-card"
               :class="{ selected: card.handSelected }"
-              :ref="(comp) => setHandSelectedElement(comp, card)"
+              :ref="(comp) => setHandSelectedElement(comp as any, card)"
               @mouseenter="setInfoPanel(InfoPanel.HandCard, card)"
               @mouseleave="setInfoPanel(InfoPanel.Default)"
             />
