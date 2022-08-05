@@ -14,7 +14,7 @@
     </p>
 
     <p>
-      During a game you can also select "?" icon on the right to get more info
+      During a game you can also select the "?" icon on the right to get more info
     </p>
 
     <h2>Special card properties</h2>
