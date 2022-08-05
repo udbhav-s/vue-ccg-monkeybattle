@@ -1,6 +1,7 @@
 import { BaseModel } from './base.model';
 import { Model } from 'objection';
 import { GameClassModel } from './gameClass.model';
+import { GameCardTypes } from 'monkeybattle-shared';
 
 export class CardModel extends BaseModel {
   static tableName = 'cards';
@@ -11,6 +12,7 @@ export class CardModel extends BaseModel {
   health?: number;
   name!: string;
   count!: number;
+  type!: GameCardTypes;
 
   gameClassId?: number;
   gameClass!: GameClassModel;

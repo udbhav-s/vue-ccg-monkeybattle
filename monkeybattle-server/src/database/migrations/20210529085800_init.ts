@@ -21,6 +21,7 @@ export async function up(knex: Knex): Promise<void> {
       table.integer('bananas').unsigned().notNullable();
       table.integer('attack').unsigned();
       table.integer('health').unsigned();
+      table.enu('type', ['CREATURE', 'SPELL']).notNullable();
       table.integer('game_class_id').unsigned();
       table
         .foreign('game_class_id')

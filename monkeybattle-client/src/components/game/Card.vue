@@ -9,7 +9,7 @@
         <img
           :src="
             require(`@/assets/images/cards/${
-              card.spell ? 'spell' : 'creature'
+              card.type.toLowerCase()
             }Template.png`)
           "
           alt=""

@@ -36,6 +36,7 @@ export class CardService {
             (cls) => cls.name === card.gameClass,
           )?.id;
         }
+        addCard.type = card.type;
         addCards.push(addCard);
       }
     }
