@@ -956,6 +956,7 @@ body {
   margin: 20px;
   max-width: 300px;
   font-size: 30px;
+  flex: none;
 }
 
 #change-turn-button:active {
