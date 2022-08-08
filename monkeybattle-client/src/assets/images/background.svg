@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="1920"
+   height="1080"
+   viewBox="0 0 508 285.75"
+   version="1.1"
+   id="svg3130"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   sodipodi:docname="backgroundWavy.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview3132"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.47433591"
+     inkscape:cx="901.26003"
+     inkscape:cy="591.35307"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     units="px" />
+  <defs
+     id="defs3127">
+    <pattern
+       inkscape:collect="always"
+       patternUnits="userSpaceOnUse"
+       width="30.066020"
+       height="5.1805778"
+       id="Wavywhite"
+       inkscape:stockid="Wavy white">
+      <path
+         style="fill:white;stroke:none;"
+         d="M 7.597,0.061 C 5.079,-0.187 2.656,0.302 -0.01,1.788 L -0.01,3.061 C 2.773,1.431 5.173,1.052 7.472,1.280 C 9.770,1.508 11.969,2.361 14.253,3.218 C 18.820,4.931 23.804,6.676 30.066,3.061 L 30.062,1.788 C 23.622,5.497 19.246,3.770 14.691,2.061 C 12.413,1.207 10.115,0.311 7.597,0.061 z "
+         id="path2466" />
+    </pattern>
+    <radialGradient
+       id="radialGradient1929"
+       cx="253.88"
+       cy="152.08"
+       r="262.70999"
+       gradientTransform="matrix(0.0020828,-0.56027,0.57437,0.0021352,166,290.2)"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         stop-color="#2c213c"
+         offset="0"
+         id="stop3" />
+      <stop
+         stop-color="#20182e"
+         offset="1"
+         id="stop5" />
+    </radialGradient>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       id="g24"
+       transform="matrix(0.9665941,0,0,0.94641356,8.2274559,7.3233481)">
+      <rect
+         x="-8.5117998"
+         y="-7.7379999"
+         width="525.40997"
+         height="301.78"
+         fill="url(#radialGradient1929)"
+         stroke-width="1.765"
+         id="rect20"
+         style="fill:url(#radialGradient1929)" />
+      <rect
+         x="-8.5117998"
+         y="-7.7379999"
+         width="525.40997"
+         height="301.78"
+         fill="url(#pattern8021)"
+         opacity="0.17958"
+         stroke-width="0.29823"
+         id="rect22"
+         style="opacity:0.0242718;fill:url(#Wavywhite);fill-opacity:1" />
+    </g>
+  </g>
+</svg>

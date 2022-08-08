@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Tammudu+2:wght@400;500;700&family=Rubik:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import "./normalize.css";
+@import "./vars.css";
+
+html, body {
+  font-family: 'Rubik', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-bg-primary);
+}
+
+.title {
+  font-family: 'Baloo Tammudu 2', Helvetica, sans-serif;
+}
+
+.center-child {
+  text-align: center;
+}
+
+.container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin: auto;
+}
+
+.restricted {
+  max-width: 800px;
+}
+
+img {
+  max-width: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.button {
+  cursor: pointer;
+  background-color: var(--text-bg-primary);
+  border: 0.5px solid;
+  padding: 0.5rem;
+  border-color: var(--text-bg-primary);
+  color: var(--bg-primary);
+}
+
+.button.outlined {
+  background: transparent;
+  border: 1px solid var(--yellow-primary);
+  color: var(--yellow-primary);
+}
+.button.outlined:not(:disabled):hover {
+  background: var(--yellow-primary);
+  color: var(--bg-primary);
+}
+
+.button:disabled, .button[disabled] {
+  cursor: not-allowed;
+}
+
+table th {
+  text-align: left;
+  border-bottom: 1px solid var(--text-bg-primary);
+}
+
+table td,
+table th {
+  padding: 5px 0;
+}
+
+.scaleAnim-leave-active, .scaleAnim-enter-active {
+  transition: transform 0.3s;
+}
+.scaleAnim-enter-to {
+  transform: scale(1);
+}
+.scaleAnim-enter, .scaleAnim-leave-to {
+  transform: scale(0);
+}
+
+@keyframes flexGrow {
+  0% {
+    flex: 0.0001;
+    transform: scale(0);
+  }
+  30% {
+    flex: 1;
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* @keyframes flexGrow {
+  0% {
+    flex: 0.0001;
+  
+  }
+  100% {
+    flex: 1;
+    transform: scale(1);
+  }
+} */
+
+
+@keyframes scaleGrow {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.slide-enter {
+  transform: translateX(10px);
+  opacity: 0;
+}
+.slide-enter-to, .slide-leave {
+  transform: translateX(0);
+  opacity: 1;
+}
+.slide-leave-to {
+  transform: translateX(-10px);
+  opacity: 0;
+}
+.slide-enter-active, .slide-leave-active {
+  transition: all 0.3s ease-out;
+}
