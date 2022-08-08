@@ -20,11 +20,7 @@ export class UserService {
   async getByNameWithPassword(
     username: string,
   ): Promise<UserModel | undefined> {
-    return await this.userModel
-      .query()
-      .select('id', 'username', 'level', 'xp')
-      .where({ username })
-      .first();
+    return await this.userModel.query().where({ username }).first();
   }
 
   async getByName(username: string): Promise<UserModel | undefined> {
