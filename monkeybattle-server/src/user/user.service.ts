@@ -11,11 +11,28 @@ export class UserService {
   constructor(@Inject('UserModel') private userModel: ModelClass<UserModel>) {}
 
   async getById(id: number): Promise<UserModel | undefined> {
-    return await this.userModel.query().findById(id);
+    return await this.userModel
+      .query()
+      .findById(id)
+      .select('id', 'username', 'level', 'xp');
+  }
+
+  async getByNameWithPassword(
+    username: string,
+  ): Promise<UserModel | undefined> {
+    return await this.userModel
+      .query()
+      .select('id', 'username', 'level', 'xp')
+      .where({ username })
+      .first();
   }
 
   async getByName(username: string): Promise<UserModel | undefined> {
-    return await this.userModel.query().where({ username }).first();
+    return await this.userModel
+      .query()
+      .select('id', 'username', 'level', 'xp')
+      .where({ username })
+      .first();
   }
 
   async getAll(options?: UserGetOptionsDto): Promise<UserModel[]> {

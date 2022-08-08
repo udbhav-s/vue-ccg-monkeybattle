@@ -12,7 +12,7 @@ export class AuthService {
     password: string,
   ): Promise<UserModel | null> {
     // get user
-    const user = await this.userService.getByName(username);
+    const user = await this.userService.getByNameWithPassword(username);
     // check if user exists
     if (!user || !user.password) return null;
     // compare password hash

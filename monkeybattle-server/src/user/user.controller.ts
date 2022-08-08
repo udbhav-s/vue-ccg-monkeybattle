@@ -37,17 +37,10 @@ export class UserController {
     private readonly deckService: DeckService,
   ) {}
 
-  // util
-  stripPassword(user: UserModel): UserModel {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...result } = user;
-    return result as UserModel;
-  }
-
   @UseGuards(LoginGuard)
   @Post('/login')
   login(@Body() body: SignUpDto, @Req() req: any): UserModel {
-    return this.stripPassword(req.user);
+    return req.user;
   }
 
   @Post('/register')
@@ -98,9 +91,7 @@ export class UserController {
   ): Promise<UserModel[]> {
     if (!options) options = {};
     if (!options.limit) options.limit = 20;
-    return await (
-      await this.userService.getAll(options)
-    ).map(this.stripPassword);
+    return await this.userService.getAll(options);
   }
 
   @UseGuards(AuthenticatedGuard)
