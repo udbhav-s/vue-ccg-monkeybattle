@@ -41,9 +41,18 @@ export class GameGateway
     server.use(socketSessionMiddleware);
     server.use((sckt: Socket, next) => {
       const socket = sckt as SessionSocket;
-      const user = socket.request.session?.user;
-      if (user && user.id) {
-        socket.user = user;
+      const userId = socket.request.session?.passport.user;
+      if (userId) {
+        this.userService
+          .getById(userId)
+          .then((user) => {
+            if (!user) throw new Error('User not found');
+            socket.user = user;
+            next();
+          })
+          .catch(() => {
+            next(new Error('Could not fetch user'));
+          });
       } else {
         next(new UnauthorizedException('Not logged in'));
       }
@@ -159,7 +168,7 @@ export class GameGateway
   }
 
   handleConnection(client: SessionSocket) {
-    console.log('New connection: ' + client.request.session?.user.username);
+    console.log('New connection: ' + client.user.username);
     this.io.sockets.emit('numOnline', {
       numOnline: this.io.engine.clientsCount,
     });
