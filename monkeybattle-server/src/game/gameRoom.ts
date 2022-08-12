@@ -124,7 +124,7 @@ export class GameRoom {
       this.updatePreviousState();
     });
 
-    watch(this.game.state, stateChangeHandler);
+    this.game.state = watch(this.game.state, stateChangeHandler);
   }
 
   setRandomPlayers(p1: SessionSocket, p2: SessionSocket) {
