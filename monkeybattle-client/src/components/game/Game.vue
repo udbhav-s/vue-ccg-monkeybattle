@@ -305,8 +305,8 @@
                 target them and cannot attack other cards. Spells can bypass
                 this.
               </p>
-              <p v-if="infoSelectedCard.modifiers?.High">
-                High - Creatures who are high won't always attack the selected
+              <p v-if="infoSelectedCard.modifiers?.Disoriented">
+                Disoriented - Creatures who are disoriented won't always attack the selected
                 target
               </p>
               <p v-if="infoSelectedCard.modifiers?.Monkeshield">

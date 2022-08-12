@@ -43,8 +43,8 @@
               <div v-if="card.modifiers?.Camo">
                 <img src="@/assets/images/icons/Camo.svg" />
               </div>
-              <div v-if="card.modifiers?.High">
-                <img src="@/assets/images/icons/High.svg" />
+              <div v-if="card.modifiers?.Disoriented">
+                <img src="@/assets/images/icons/Disoriented.svg" />
               </div>
               <div v-if="card.modifiers?.Monkeshield">
                 <img src="@/assets/images/icons/Monkeshield.svg" />

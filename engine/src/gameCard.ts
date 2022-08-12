@@ -24,7 +24,7 @@ export interface GameCard {
   modifiers?: {
     Burn?: number;
     Blocker?: boolean;
-    High?: boolean;
+    Disoriented?: boolean;
     Camo?: boolean;
     Regen?: number;
     Monkeshield?: boolean;

@@ -111,13 +111,13 @@ export const baseSet: GameCard[] = [
   },
   {
     name: 'Stoned Chimp',
-    description: 'High',
+    description: 'Disoriented',
     bananas: 1,
     attack: 2,
     health: 3,
     type: GameCardTypes.CREATURE,
     modifiers: {
-      High: true,
+      Disoriented: true,
     },
   },
   {

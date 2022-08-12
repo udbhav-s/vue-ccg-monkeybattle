@@ -24,7 +24,7 @@
         them and cannot attack other cards. Spells can bypass this.
       </div>
       <div>
-        High 🌿 - Creatures who are high won't always attack your selected
+        Disoriented 🌿 - Creatures who are disoriented won't always attack your selected
         target
       </div>
       <div>

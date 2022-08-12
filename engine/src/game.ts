@@ -628,8 +628,8 @@ export class Game {
       // validated - return without performing action
       if (onlyValidate) return;
 
-      // if high, pick another valid target with chance
-      if (card.modifiers?.High) {
+      // if disoriented, pick another valid target with chance
+      if (card.modifiers?.Disoriented) {
         const otherValidTargets: SelectableTarget[] = [];
         if (hasBlocker) {
           otherValidTargets.push(
