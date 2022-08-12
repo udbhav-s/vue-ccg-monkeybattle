@@ -139,10 +139,10 @@ export class GameGateway
       this.logger.debug(`Queue empty, added ${client.user.username}`);
     } else {
       const otherClient = this.queue.shift() as SessionSocket;
-      this.logger.debug(
-        `Matching ${otherClient.user.username} with ${client.user.username}, queue length ${this.queue.length}`,
-      );
       const gameId = uid();
+      this.logger.debug(
+        `Matching ${otherClient.user.username} with ${client.user.username} in ${gameId}, queue length ${this.queue.length}`,
+      );
       // join sockets to new room
       client.join(gameId);
       otherClient.join(gameId);
@@ -195,7 +195,7 @@ export class GameGateway
     winner.inGame = false;
     loser.inGame = false;
 
-    console.log('winner: ' + winner.user.username);
+    this.logger.debug('Winner of ' + id + ' : ' + winner.user.username);
 
     const winningXp = 100;
     let losingXp = 0;
