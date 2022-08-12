@@ -47,7 +47,10 @@ export class UserService {
   }
 
   async addXP(id: number, XP: number): Promise<UserModel> {
-    const user = await this.userModel.query().findById(id);
+    const user = await this.userModel
+      .query()
+      .findById(id)
+      .select('id', 'username', 'level', 'xp');
     if (!user) throw new Error('User not found');
 
     const total = user.xp + XP;
@@ -56,7 +59,6 @@ export class UserService {
       xp: total,
       level,
     });
-    await user.$query();
     return user;
   }
 }
