@@ -117,14 +117,9 @@ export class Game {
           opponentDisconnected: data.disconnect || false,
         };
         this.turnTimeout?.clear();
-        this.notifyUpdateState();
         this.actions.emit('victory', data);
       },
     );
-  }
-
-  notifyUpdateState() {
-    this.actions.emit('updateState');
   }
 
   otherPlayer(player: Player): Player {
@@ -156,8 +151,6 @@ export class Game {
     player.board = player.board.filter((c) => c.uid !== cardUid);
     player.dead.push(card);
 
-    this.notifyUpdateState();
-
     // remove card triggers
     this.triggers = this.triggers.filter((t) => t.cardUid !== card!.uid);
 
@@ -176,7 +169,6 @@ export class Game {
       if (card.health <= 0) {
         this.destroyCard(card.uid!);
       } else {
-        this.notifyUpdateState();
         this.eventEmitter.emit(Triggers.CreatureDamagedTrigger, {
           card,
           damage: value,
@@ -191,25 +183,19 @@ export class Game {
 
     card.health += value;
     if (card.health > card.baseHealth) card.health = card.baseHealth;
-
-    this.notifyUpdateState();
   }
 
   setBananas(card: GameCard, value: number) {
     card.bananas = value;
-    this.notifyUpdateState();
   }
 
   setAttack(card: GameCard, value: number) {
     card.attack = value;
-
-    this.notifyUpdateState();
   }
 
   setHealth(card: GameCard, value: number) {
     card.health = value;
     if (card.health <= 0) this.destroyCard(card.uid as string);
-    else this.notifyUpdateState();
   }
 
   dealMonkeyDamage(player: Player, damage: number) {
@@ -219,8 +205,6 @@ export class Game {
         player: this.otherPlayer(player),
       });
     } else {
-      this.notifyUpdateState();
-
       this.eventEmitter.emit(Triggers.MonkeyDamagedTrigger, {
         player,
         damage,
@@ -231,15 +215,11 @@ export class Game {
   healMonkey(player: Player, value: number) {
     player.monkeyHealth += value;
     if (player.monkeyHealth >= 20) player.monkeyHealth = 20;
-
-    this.notifyUpdateState();
   }
 
   setModifier(card: GameCard, modifier: string, value: any) {
     if (!card.modifiers) card.modifiers = {};
     card.modifiers[modifier] = value;
-
-    this.notifyUpdateState();
   }
 
   summon(player: Player, cardName: string, count?: number) {
@@ -251,8 +231,6 @@ export class Game {
       const addCard = initGameCard({ ...card });
       if (player.board.length >= 6) return;
       player.board.push(addCard);
-
-      this.notifyUpdateState();
     }
   }
 
@@ -272,8 +250,6 @@ export class Game {
         player.deck.length,
       );
     }
-
-    this.notifyUpdateState();
 
     // set timeout for next stage
     Timeout.set(() => {
@@ -295,14 +271,11 @@ export class Game {
         player.deck.length - 3,
         player.deck.length,
       );
-
-      this.notifyUpdateState();
     } else throw new Error('Reshuffling not allowed!');
   }
 
   acceptCards(player: Player) {
     player.cardsPicked = true;
-    this.notifyUpdateState();
     if (
       this.state.player1.cardsPicked &&
       this.state.player2.cardsPicked &&
@@ -362,7 +335,6 @@ export class Game {
       }
     }
     this.actions.emit('roundStart', this.state.round);
-    this.notifyUpdateState();
   }
 
   nextTurn() {
@@ -381,8 +353,6 @@ export class Game {
 
         const cards = this.drawFromDeck(player, 1);
         player.hand.push(...cards);
-
-        this.notifyUpdateState();
       }
     };
 
@@ -415,7 +385,6 @@ export class Game {
       if (card.modifiers?.Regen) this.heal(card, card.modifiers.Regen);
     }
 
-    this.notifyUpdateState();
     this.resetTurnTimeout();
   }
 
@@ -493,7 +462,6 @@ export class Game {
 
       player.hand = player.hand.filter((c) => c.uid !== uid);
       player.bananas -= card.bananas;
-      this.notifyUpdateState();
 
       const afterDelay = () => {
         if (!skipDelay) this.turnTimeout?.resume();
@@ -585,7 +553,6 @@ export class Game {
       player.hand = player.hand.filter((c) => c.uid !== uid);
       player.bananas -= card.bananas;
 
-      this.notifyUpdateState();
       this.actions.emit('creaturePlayed', {
         user: player.user.id,
         uid: card.uid,
@@ -594,6 +561,7 @@ export class Game {
           targets.length === 1
             ? targets[0]
             : undefined,
+        hasInstant: card.instant ? true : false,
       });
 
       const afterDelay = () => {
@@ -607,11 +575,16 @@ export class Game {
         });
       };
 
+      const delay =
+        card.instant && targets.length
+          ? this.config.playCreatureWithInstantDelay
+          : this.config.playCreatureDelay;
+
       if (skipDelay) afterDelay();
       else {
         // pause for client animation
         this.turnTimeout?.pause();
-        sleep(this.config.playCreatureDelay).then(afterDelay);
+        sleep(delay).then(afterDelay);
       }
     } else throw new Error('Cannot play card!');
   }
@@ -727,8 +700,6 @@ export class Game {
     this.state.turn = 0;
     this.state.round = 0;
     this.nextRound(true);
-
-    this.notifyUpdateState();
 
     // start turn timeout
     this.resetTurnTimeout();

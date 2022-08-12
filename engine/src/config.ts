@@ -5,5 +5,6 @@ export const gameConfig = {
   turnTimeout: 60000,
   playSpellDelay: 1500,
   playCreatureDelay: 300,
+  playCreatureWithInstantDelay: 1500,
   attackDelay: 1000,
 };

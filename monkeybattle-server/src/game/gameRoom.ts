@@ -4,6 +4,8 @@ import { AddPlayer, Game, GameState, Player } from 'monkeybattle-shared';
 import * as jsonpatch from 'fast-json-patch';
 import cloneDeep from 'fast-copy';
 import { SessionSocket } from 'src/common/types/sessionSocket';
+import { throttle } from 'throttle-debounce';
+import { watch } from './gameStateProxy';
 
 export class GameRoom {
   static io: Server;
@@ -25,6 +27,8 @@ export class GameRoom {
   prevGameState!: GameState;
   game: Game;
 
+  updateThrottleMs!: 3;
+
   constructor(p1: SessionSocket, p2: SessionSocket, rm: string, cb: any) {
     this.setRandomPlayers(p1, p2);
     this.endCallback = cb;
@@ -35,6 +39,7 @@ export class GameRoom {
       this.p2Socket as AddPlayer,
     );
     this.updatePreviousState();
+    this.makeStateReactive();
 
     this.warnIdleAfter = this.game.config.turnTimeout * 2.5;
     this.kickIdleAfter = this.game.config.turnTimeout * 4.5;
@@ -47,6 +52,10 @@ export class GameRoom {
 
     // notify players of joined game
     this.emitEach('gameJoined', () => '');
+  }
+
+  updatePreviousState() {
+    this.prevGameState = cloneDeep(this.game.state);
   }
 
   // remove player private properties before sending state
@@ -107,8 +116,15 @@ export class GameRoom {
     return patch;
   }
 
-  updatePreviousState() {
-    this.prevGameState = cloneDeep(this.game.state);
+  makeStateReactive() {
+    const stateChangeHandler = throttle(this.updateThrottleMs, () => {
+      this.p1Socket.emit('updateState', this.getPatchedState(this.p1Socket));
+      this.p2Socket.emit('updateState', this.getPatchedState(this.p2Socket));
+      // this.patchState(); todo - match spectators
+      this.updatePreviousState();
+    });
+
+    watch(this.game.state, stateChangeHandler);
   }
 
   setRandomPlayers(p1: SessionSocket, p2: SessionSocket) {
@@ -188,14 +204,6 @@ export class GameRoom {
           ? [this.p1Socket, this.p2Socket]
           : [this.p2Socket, this.p1Socket];
       this.endCallback(this.room, sockets[0], sockets[1], data.disconnect);
-    });
-
-    // patch state
-    this.game.actions.on('updateState', () => {
-      this.p1Socket.emit('updateState', this.getPatchedState(this.p1Socket));
-      this.p2Socket.emit('updateState', this.getPatchedState(this.p2Socket));
-      // this.patchState(); todo - match spectators
-      this.updatePreviousState();
     });
 
     // check for idle

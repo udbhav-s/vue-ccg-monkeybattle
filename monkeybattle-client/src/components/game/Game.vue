@@ -69,13 +69,11 @@
           :fromX="boardCardSelectedCoords.x"
           :fromY="boardCardSelectedCoords.y"
         />
-        <Arrow
-          v-if="arrowCoords.length"
-          :transition="true"
-          :fromX="arrowCoords[arrowCoords.length - 1].from.x"
-          :fromY="arrowCoords[arrowCoords.length - 1].from.y"
-          :toX="arrowCoords[arrowCoords.length - 1].to.x"
-          :toY="arrowCoords[arrowCoords.length - 1].to.y"
+        <ArrowElementWrapper
+          v-if="arrows.length"
+          :toElementId="arrows[arrows.length - 1].toElementId"
+          :fromElementId="arrows[arrows.length - 1].fromElementId"
+          :game="game"
         />
 
         <div class="panel opponent-panel">
@@ -379,6 +377,7 @@ import { useAiGame } from "../../game/aiGameClient";
 import CardComponent from "./Card.vue";
 import Arrow from "./Arrow.vue";
 import Monkey from "./Monkey.vue";
+import ArrowElementWrapper from "./ArrowElementWrapper.vue";
 import { userStore } from "@/store";
 import { deckService } from "@/services/deck.service";
 import { useToast } from "vue-toastification";
@@ -414,12 +413,14 @@ export default defineComponent({
     Card: CardComponent,
     Arrow,
     Monkey,
+    ArrowElementWrapper,
   },
   emits: ["notFound"],
 
   async setup(props, { emit }) {
     const toast = useToast();
     let selectedGameClient;
+    let onUpdateHandlers;
 
     // watch cannot be called after await
     // stop handles have to be returned and called manually to close watchers
@@ -457,6 +458,7 @@ export default defineComponent({
     } else {
       try {
         selectedGameClient = await useClientGame();
+        onUpdateHandlers = selectedGameClient.onUpdateHandlers;
       } catch (error) {
         emit("notFound");
         throw new Error("Game not found");
@@ -513,29 +515,22 @@ export default defineComponent({
       )
     );
 
-    const arrowCoords = ref<
+    const arrows = ref<
       {
-        from: { x: number; y: number };
-        to: { x: number; y: number };
+        fromElementId: string;
+        toElementId: string;
       }[]
     >([]);
 
-    const getTargetBoundsFromCardUid = (
-      cardUid: string,
-      target: TargetOrCard
-    ) => {
+    const getTargetElementIdFromCardUid = (
+      target: TargetOrCard,
+      userId: number
+    ): string => {
       if (target === TargetTypes.EnemyMonkey) {
-        let t;
-        if (game.state.player.board.find((c) => c.uid === cardUid))
-          t = document.getElementById("opponent-monkey");
-        else t = document.getElementById("player-monkey");
-        if (!t) throw new Error("Opponent monkey element not found");
-        return t.getBoundingClientRect();
-      } else {
-        let t = document.getElementById(`card-${target.uid}`);
-        if (!t) throw new Error("Attacked card not found");
-        return t.getBoundingClientRect();
-      }
+        if (userId === game.state.player.user.id)
+          return "opponent-monkey";
+        else return "player-monkey";
+      } else return `card-${target.uid}`;
     };
 
     // animations and timer adjust
@@ -550,77 +545,73 @@ export default defineComponent({
           game.state.player.board.push(data.card);
         } else game.state.opponent.board.push(data.card);
 
-        // wait for DOM update
-        nextTick(async () => {
-          if (data.target) {
-            const from = document
-              .getElementById(`card-${data.card.uid}`)
-              ?.getBoundingClientRect();
-            if (!from) throw new Error("Element not found");
+        await nextTick();
 
-            const to = getTargetBoundsFromCardUid(data.card.uid, data.target);
+        if (data.target) {
+          const fromElementId = `card-${data.card.uid}`
+          const toElementId = getTargetElementIdFromCardUid(data.target, data.user);
 
-            arrowCoords.value.push({
-              from: {
-                x: from.x + from.width / 2,
-                y: from.y + from.height / 2,
-              },
-              to: {
-                x: to.x + to.width / 2,
-                y: to.y + to.height / 2,
-              },
-            });
-          }
+          arrows.value.push({
+            fromElementId,
+            toElementId,
+          });
+        }
 
-          await sleep(gameConfig.playSpellDelay);
+        await sleep(gameConfig.playSpellDelay);
 
-          arrowCoords.value.shift();
+        arrows.value.shift();
 
-          game.state.player.board = game.state.player.board.filter(
-            (c) => c.uid !== data.card.uid
-          );
-          game.state.opponent.board = game.state.opponent.board.filter(
-            (c) => c.uid !== data.card.uid
-          );
-          timerAnimation.play();
-        });
+        game.state.player.board = game.state.player.board.filter(
+          (c) => c.uid !== data.card.uid
+        );
+        game.state.opponent.board = game.state.opponent.board.filter(
+          (c) => c.uid !== data.card.uid
+        );
+        timerAnimation.play();
       }
     );
 
     eventEmitter.on(
       "creaturePlayed",
-      async (data: { uid: string; target?: TargetOrCard }) => {
+      async (data: { user: number, uid: string; target?: TargetOrCard, hasInstant: boolean }) => {
         if (!timerAnimation) return;
+
         timerAnimation.pause();
 
-        nextTick(async () => {
-          if (data.target) {
-            const from = document
-              .getElementById(`card-${data.uid}`)
-              ?.getBoundingClientRect();
-            if (!from) throw new Error("Element not found");
+        if (data.target) {
+          const fromElementId = `card-${data.uid}`;
+          const toElementId = getTargetElementIdFromCardUid(data.target, data.user);
 
-            const to = getTargetBoundsFromCardUid(data.uid, data.target);
+          arrows.value.push({
+            fromElementId,
+            toElementId,
+          });
+        }
 
-            arrowCoords.value.push({
-              from: {
-                x: from.x + from.width / 2,
-                y: from.y + from.height / 2,
-              },
-              to: {
-                x: to.x + to.width / 2,
-                y: to.y + to.height / 2,
-              },
-            });
-          }
+        await sleep(data.hasInstant ? gameConfig.playCreatureWithInstantDelay : gameConfig.playCreatureDelay);
 
-          await sleep(gameConfig.playCreatureDelay);
-
-          arrowCoords.value.shift();
-          timerAnimation.play();
-        });
+        arrows.value.shift();
+        timerAnimation.play();
       }
     );
+
+    const getTargetBoundsFromCardUid = (
+      target: TargetOrCard,
+      userId: number,
+    ) => {
+      if (target === TargetTypes.EnemyMonkey) {
+        let t;
+        if (userId === game.state.player.user.id)
+          t = document.getElementById("opponent-monkey");
+        else t = document.getElementById("player-monkey");
+        if (!t) throw new Error("Opponent monkey element not found");
+        return t.getBoundingClientRect();
+      } else {
+        let t = document.getElementById(`card-${target.uid}`);
+        if (!t) throw new Error("Attacked card not found");
+        return t.getBoundingClientRect();
+      }
+    };
 
     // attack animation
     eventEmitter.on("creatureAttack", async (data) => {
@@ -634,8 +625,8 @@ export default defineComponent({
       const attackingCardBounds = attackingCard.getBoundingClientRect();
 
       let targetBounds = getTargetBoundsFromCardUid(
-        data.attackingUid,
-        data.attacked
+        data.attacked,
+        data.user,
       );
 
       let translateY = targetBounds.y - attackingCardBounds.y;
@@ -831,7 +822,7 @@ export default defineComponent({
       playCard,
       doneTurn,
       selectedHandCard,
-      arrowCoords,
+      arrows,
       setHandSelectedElement,
       handCardSelectedCoords,
       selectedBoardCard,

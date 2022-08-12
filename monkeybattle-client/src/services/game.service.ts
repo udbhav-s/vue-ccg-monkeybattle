@@ -2,6 +2,9 @@ import { io } from "socket.io-client";
 import { Ref, ref } from "vue";
 
 export const socket = io();
+socket.on("connect_error", (err) => {
+  console.log("Socket Connection Errr: " + err.message);
+});
 
 export function queue(
   deckId: number,
