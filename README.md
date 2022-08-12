@@ -22,3 +22,7 @@ cd ../monkeybattle-client
 npm install
 npm run serve
 ```
+
+# State Management Overview
+
+![game state](https://user-images.githubusercontent.com/50021387/184360079-d55741b4-8566-4ad2-8f70-3dc8c041fd46.png)
