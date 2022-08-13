@@ -76,7 +76,6 @@ export class Game {
   eventEmitter: EventEmitter;
   triggers: { cardUid: string; handler: any }[] = [];
   config = gameConfig;
-  // not currently used as this.timeout, added for debugging
   turnTimeout?: TimeoutInstance;
 
   constructor(p1?: AddPlayer, p2?: AddPlayer, state?: GameState) {
