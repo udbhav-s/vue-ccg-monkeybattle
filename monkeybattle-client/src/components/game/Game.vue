@@ -420,7 +420,6 @@ export default defineComponent({
   async setup(props, { emit }) {
     const toast = useToast();
     let selectedGameClient;
-    let onUpdateHandlers;
 
     // watch cannot be called after await
     // stop handles have to be returned and called manually to close watchers
@@ -458,7 +457,6 @@ export default defineComponent({
     } else {
       try {
         selectedGameClient = await useClientGame();
-        onUpdateHandlers = selectedGameClient.onUpdateHandlers;
       } catch (error) {
         emit("notFound");
         throw new Error("Game not found");

@@ -38,12 +38,6 @@ export const useClientGame = async () => {
     });
   };
 
-  // The creaturePlayed notification can be sent before the accompanying updateState
-  // in this case, doing a DOM operation related to the card in a creaturePlayed handler can fail
-  // this array holds update handles that are executed on receiving each updateState
-  // so a creaturePlayed handler can attach a callback to execute after updateState has been received
-  const onUpdateHandlers = [] as ((data: jsonpatch.Operation[] | undefined) => void)[];
-
   // initialise game state
   const stateResponse = await getState();
   if ("error" in stateResponse) throw new Error(stateResponse.error);
@@ -56,8 +50,6 @@ export const useClientGame = async () => {
   // patches to player1/player2 should apply to player/opponent references
   socket.on("updateState", (patches: jsonpatch.Operation[]) => {
     game.state = jsonpatch.applyPatch(game.state, patches).newDocument;
-    onUpdateHandlers.forEach((f) => f(patches));
-    onUpdateHandlers.length = 0;
   });
 
   socket.on("creaturePlayed", (data: { target?: string }) => {
@@ -169,7 +161,6 @@ export const useClientGame = async () => {
   return {
     game,
     eventEmitter,
-    onUpdateHandlers,
     ready,
     reshuffle,
     acceptPickedCards,
