@@ -4,8 +4,16 @@ Monkeybattle is a Hearthstone-style CCG made with Vue 3 & NestJS in TypeScript. 
 
 ![image](https://user-images.githubusercontent.com/50021387/184352031-5b9542e5-f7ae-4a5d-b343-511b51f0b748.png)
 
-# Setup
+# Setup  
+Create a postgres database and an env with the following info  
+```
+DATABASE_HOST
+DATABASE_USERNAME
+DATABASE_PASSWORD
+DATABASE_NAME
+```
 
+Running the project
 ```
 # compile the shared code used between server and client
 cd engine
