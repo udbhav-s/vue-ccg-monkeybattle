@@ -13,6 +13,11 @@ DATABASE_PASSWORD
 DATABASE_NAME
 ```
 
+Run the database migration
+```
+npm run migrate
+```  
+
 Running the project
 ```
 # compile the shared code used between server and client
